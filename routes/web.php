@@ -19,51 +19,76 @@ Route::get('/', function () {
 
 	//Create a user by user Model
 	Route::get("create-user", function(){
-		$user = new App\User();
-		$user->name = 'nguyentrungduc';
-		$user->password = Hash::make('12345678');
-		$user->email = 'ducnt220997@gmail.com';
+        /*Using elequent*/
+//            $user = new App\User();
+//            $user->name = 'nguyentrungduc';
+//            $user->password = Hash::make('12345678');
+//            $user->email = 'ducnt220997@gmail.com';
+//
+//            return $user->save();
+        /*Using elequent*/
 
-		return $user->save();
+        /*Using query builder*/
+        dd(\DB::table('users')->insert([
+            ['name' => 'nguyentrungduc.dev', 'password' => Hash::make('12345678'), 'email' => 'ducnt220997@gmail.com1', 'role_id' => 1]
+        ]));
+        /*Using query builder*/
 	});
 
 	//Create a phone by user Model
 	Route::get("create-phone-by-user", function(){
-		$user = App\User::find(1);
+        /*Using elequent*/
+            $user = App\User::find(1);
 
-		$phone = new App\Phone();
-		$phone->phone = '9429343852';
-		 
-		return $user->phone()->save($phone);
+            $phone = new App\Phone();
+            $phone->phone = '9429343852';
+
+            return $user->phone()->save($phone);
+        /*Using elequent*/
+
+        /*Using query builder*/
+//            dd(\DB::table('phones')->insert([
+//                ['phone' => '0901762797', 'user_id' => 1]
+//            ]));
+        /*Using query builder*/
 	});
 
 	//Read a phone by user Model
 	Route::get("read-phone-by-user", function(){
 		$user = App\User::find(1);
-		 
+
 		dd($user->phone::all());
 	});
 
 	//Read a user by phone Model
-	Route::get("read-phone-by-user", function(){
+	Route::get("read-user-by-phone", function(){
 		$phone = App\Phone::find(1);
-		 
+
 		dd($phone->user::all());
 	});
 
 	//Update a phone by user Model
 	Route::get("update-phone-by-user", function(){
-		$user = App\User::find(1);
+        /*Using elequent*/
+            $user = App\User::find(1);
 
-		$phone = [
-			'phone' => '9429343852'
-		];
-		 
-		dd($user->phone()->update($phone));
+            $phone = [
+                'phone' => '9429343852'
+            ];
+
+            dd($user->phone()->update($phone));
+        /*Using elequent*/
+
+        /*Using query builder*/
+//            dd(\DB::table('phones')->where('user_id', 1)->update([
+//                ['phone' => '09017627978']
+//            ]));
+        /*Using query builder*/
 	});
 
 	//Update a user by phone Model
 	Route::get("update-user-by-phone", function(){
+        /*Using elequent*/
 		$phone = App\Phone::find(1);
 
 		$user = [
@@ -71,17 +96,24 @@ Route::get('/', function () {
 		];
 
 		dd($phone->user()->update($user));
+        /*Using elequent*/
+
+        /*Using query builder*/
+//            dd(\DB::table('phones')->where('user_id', 1)->update([
+//                ['phone' => '09017627978']
+//            ]));
+        /*Using query builder*/
 	});
 
 	//Delete a phone by user Model
 	Route::get("delete-phone-by-user", function(){
 		$user = App\User::find(1);
-		 
+
 		dd($user->phone()->delete());
 	});
 
 	//Update a user by phone Model
-	Route::get("update-user-by-phone", function(){
+	Route::get("delete-user-by-phone", function(){
 		$phone = App\Phone::find(1);
 
 		dd($phone->user()->delete());
@@ -103,18 +135,26 @@ Route::get('/', function () {
 
 	//Create post via user
 	Route::get('create-post', function(){
-		// $user = App\User::create([
-		// 	'name' => 'nguyentrungduc_create_post',
-		// 	'password' => Hash::make('12345678'),
-		// 	'email' => 'ducnt220997@gmail.com1'
-		// ]);
+        /*Using elequent*/
+            // $user = App\User::create([
+            // 	'name' => 'nguyentrungduc_create_post',
+            // 	'password' => Hash::make('12345678'),
+            // 	'email' => 'ducnt220997@gmail.com1'
+            // ]);
 
-		$user = App\User::findOrFail(1);
+//            $user = App\User::findOrFail(1);
+//
+//            return $user->posts()->create([
+//                'title' => 'demo create post 2',
+//                'body' => 'create by user via relationship'
+//            ]);
+        /*Using elequent*/
 
-		return $user->posts()->create([
-			'title' => 'demo create post 2',
-			'body' => 'create by user via relationship'
-		]);
+        /*Using query builder*/
+            dd(\DB::table('posts')->insert([
+                ['title' => 'demo create post 2', 'body' => 'create by user via relationship', 'user_id' => 1]
+            ]));
+        /*Using query builder*/
 
 	});
 
@@ -134,12 +174,21 @@ Route::get('/', function () {
 
 	//Update post by user
 	Route::get('update-post-by-user', function(){
-		$user = App\User::findOrFail(4);
+        /*Using elequent*/
+//            $user = App\User::findOrFail(4);
+//
+//            dd($user->posts()->where('id', 1)->update([
+//                'title' => 'demo create post 1',
+//                'body' => 'create by user via relationship'
+//            ]));
+        /*Using elequent*/
 
-		dd($user->posts()->where('id', 1)->update([
-			'title' => 'demo create post 1',
-			'body' => 'create by user via relationship'
-		]));
+        /*Using query builder*/
+            dd(\DB::table('posts')->where(['id' => 1, 'user_id' => 4])->update([
+                'title' => 'demo create post 1',
+                'body' => 'create by user via relationship'
+            ]));
+        /*Using query builder*/
 	});
 
 	//Update user by post
@@ -152,7 +201,7 @@ Route::get('/', function () {
 	});
 
 	//Delete post by user
-	Route::get('update-post-by-user', function(){
+	Route::get('delete-post-by-user', function(){
 		$user = App\User::findOrFail(4);
 
 		dd($user->posts()->whereUser_id(1)->delete());
@@ -164,14 +213,30 @@ Route::get('/', function () {
 
 	//Create categories
 	Route::get("create-categories", function(){
-		$user = App\User::findOrFail(4);
-		dd($user->posts()->create([
-			'title' => 'demo create post many many relationship',
-			'body' => 'create by user via relationship'
-		])->categories()->create([
-			'slug' => str_slug('Hello World', '-'),
-			'category' => 'Demo'
-		]));
+        /*Using elequent*/
+//            $user = App\User::findOrFail(4);
+//            dd($user->posts()->create([
+//                'title' => 'demo create post many many relationship',
+//                'body' => 'create by user via relationship'
+//            ])->categories()->create([
+//                'slug' => str_slug('Hello World', '-'),
+//                'category' => 'Demo'
+//            ]));
+        /*Using elequent*/
+
+        /*Using query builder*/
+            dd(\DB::table('category_post')->insertGetId([
+                'post_id' => \DB::table('posts')->insertGetId([
+                    'title' => 'demo create post many many relationship',
+                    'body' => 'create by user via relationship',
+                    'user_id' => 1
+                ]),
+                'category_id' => \DB::table('categories')->insertGetId([
+                    'slug' => str_slug('Hello World', '-'),
+                    'category' => 'Demo'
+                ])
+            ]));
+        /*Using query builder*/
 	});
 
 	//Read categories
@@ -209,18 +274,7 @@ Route::get('/', function () {
 		$role->role = 'demo';
 		$role->save();
 
-		return $user->save();
-	});
-
-	//Create User
-	Route::get("create-user", function(){
-		$user = new App\User();
-		$user->name = 'nguyentrungduc';
-		$user->password = Hash::make('12345678');
-		$user->email = 'ducnt220997@gmail.com';
-		$user->role_id = 1;
-
-		return $user->save();
+		return $role->save();
 	});
 
 	//Show Role/Post
@@ -232,41 +286,56 @@ Route::get('/', function () {
 /*Many to through relationship eloquent laravel */
 
 /*Polymorphic  relationship eloquent laravel */
-	
+
 	//Create comment
 	Route::get("comment/create", function(){
-		$post = App\Post::find(1);
-		dd($post->comments()->create([
-			'user_id' => 2,
-			'content' => 'Demo'
-		]));
+        /*Using elequent*/
+//            $post = App\Post::find(1);
+//            dd($post->comments()->create([
+//                'user_id' => 2,
+//                'content' => 'Demo'
+//            ]));
 
-		// $portfolio = App\Portfolio::find(1);
-		// dd($portfolio->comments()->create([
-		// 	'user_id' => 2,
-		// 	'content' => 'Demo'
-		// ]));
+            // $portfolio = App\Portfolio::find(1);
+            // dd($portfolio->comments()->create([
+            // 	'user_id' => 2,
+            // 	'content' => 'Demo'
+            // ]));
+        /*Using elequent*/
+
+        /*Using query builder*/
+            dd(\DB::table('comments')->create([
+                'user_id' => \DB::table('posts')->where('id', 1)->first()->user_id,
+                'content' => 'Demo'
+            ]));
+        /*Using query builder*/
 	});
 
 	//Read
 	Route::get("comment/read", function(){
-		// $post = App\Post::findOrFail(1);
-		// $comments = $post->comments;
-		// foreach ($comments as $comment) {
-		// 	dd($comment);
-		// 	echo $comment->user->name . ' - ' . 
-		// 		$comment->content . 
-		// 		$comment->commentable->title;
-		// }
+        /*Using elequent*/
+            // $post = App\Post::findOrFail(1);
+            // $comments = $post->comments;
+            // foreach ($comments as $comment) {
+            // 	dd($comment);
+            // 	echo $comment->user->name . ' - ' .
+            // 		$comment->content .
+            // 		$comment->commentable->title;
+            // }
 
-		$portfolio = App\Portfolio::findOrFail(1);
-		$comments = $portfolio->comments;
-		foreach ($comments as $comment) {
-			dd($comment);
-			echo $comment->user->name . ' - ' . 
-				$comment->content . 
-				$comment->commentable->title;
-		}
+            $portfolio = App\Portfolio::findOrFail(1);
+            $comments = $portfolio->comments;
+            foreach ($comments as $comment) {
+                dd($comment);
+                echo $comment->user->name . ' - ' .
+                    $comment->content .
+                    $comment->commentable->title;
+            }
+        /*Using elequent*/
+
+        /*Using query builder*/
+
+        /*Using query builder*/
 	});
 
 	//Update
